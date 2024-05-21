@@ -51,7 +51,7 @@ const NewViewing = () => {
             employeeList.length > 0 ?
                 setEmployeeList([...employeeList, ...data]) :
                 setEmployeeList(data);
-            setLoading(false);
+                setLoading(false);
         }
         catch (err) {
             console.log(err);
@@ -76,7 +76,7 @@ const NewViewing = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setQuery(`select=${choice}&serchValue=${serchValue}`)
+        setQuery(`select=${choice}&serchValue=${serchValue}&page=${1}`)
         doFilterApi()
     }
 
@@ -104,12 +104,23 @@ const NewViewing = () => {
         setStart(startIndex);
         setActiveButton(pageNum);
         setButtonNumber(pageNum);
+        if (pageNum == totalPages){
+            goToNextPage()
+        } 
+    }
 
-        if (pageNum == totalPages) {
-            nav(`/viewing?page=${page + 1}`)
-            setPage(page + 1)
+    const goToNextPage = async () =>  {
+        try {
+            const nextPage = parseInt(query.get("page"),10)+1;
+            const nextPageUrl = API_URL + "?page=" + nextPage.toString();
+            const data = await doApiGet(nextPageUrl);
+            if( data.length>=1 ){
+            setPage(nextPage)
+            nav(`/viewing?page=${page}`)
+            } 
+        } catch (err) {
+            console.log(err);
         }
-
     }
 
     const renderPaginationButtons = () => {
