@@ -5,7 +5,7 @@ import { Route, Routes, BrowserRouter } from
   import Adding from './components/adding'
   import Updating from './components/updating'
   import Viewing from './components/viewing'
-  import NewViewing from './components/viewing'
+
 
 function App() {
   return (

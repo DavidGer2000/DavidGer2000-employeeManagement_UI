@@ -32,17 +32,10 @@ const NewViewing = () => {
     }, [page]);
 
     useEffect(() => {
+        const currentItems = (activeButton-1)*EMPLOYEE_PER_PAGE
+        setVisibleList(employeeList.slice(currentItems, currentItems+EMPLOYEE_PER_PAGE))
         setTotalPages(Math.ceil(employeeList.length / EMPLOYEE_PER_PAGE))
-        setVisibleList(employeeList.slice(0, EMPLOYEE_PER_PAGE))
     }, [employeeList]);
-
-    useEffect(() => {
-        setStart(0)
-        setActiveButton(1)
-        setButtonNumber(1)
-    }, []);
-
-
 
     const doApi = async (_bodyData) => {
         try {
@@ -104,7 +97,7 @@ const NewViewing = () => {
         setStart(startIndex);
         setActiveButton(pageNum);
         setButtonNumber(pageNum);
-        if (pageNum == totalPages){
+        if (pageNum == totalPages && totalPages%4==0 ){
             goToNextPage()
         } 
     }
@@ -116,7 +109,10 @@ const NewViewing = () => {
             const data = await doApiGet(nextPageUrl);
             if( data.length>=1 ){
             setPage(nextPage)
-            nav(`/viewing?page=${page}`)
+            if(serchValue)
+            setQuery(`select=${choice}&serchValue=${serchValue}&page=${nextPage}`)
+            else
+            setQuery(`page=${nextPage}`)
             } 
         } catch (err) {
             console.log(err);
